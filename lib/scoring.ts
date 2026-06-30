@@ -1,4 +1,4 @@
-import type { GlobalResult, SectionScore, UserAnswer } from "./types";
+import type { GlobalResult, SectionScore, UserAnswer, AnswerStats } from "./types";
 
 const INCORRECT_PENALTY = 0.33;
 
@@ -97,6 +97,20 @@ function getSectionBadge(sectionName: string, score: number): string {
   };
 
   return badges[sectionName]?.[tier] ?? "Sense classificació";
+}
+
+export function getAnswerStats(answers: UserAnswer[]): AnswerStats {
+  return {
+    correct: answers.filter((a) => a.choice === "correct").length,
+    incorrect: answers.filter((a) => a.choice === "incorrect").length,
+    blank: answers.filter((a) => a.choice === "skipped").length,
+    total: answers.length,
+  };
+}
+
+export function getFirstBlankIndex(answers: UserAnswer[]): number | null {
+  const blank = answers.find((a) => a.choice === "skipped");
+  return blank ? blank.questionIndex : null;
 }
 
 export function formatScore(score: number): string {

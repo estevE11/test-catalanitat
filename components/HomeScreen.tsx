@@ -1,6 +1,9 @@
 "use client";
 
-import { BookOpen, ChevronRight, Minus, Play, ShieldCheck } from "lucide-react";
+import { BookOpen, Play, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import ScoringLegend from "@/components/ScoringLegend";
+import StartExamModal from "@/components/StartExamModal";
 
 interface HomeScreenProps {
   onStart: () => void;
@@ -9,6 +12,17 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen({ onStart, loading, error }: HomeScreenProps) {
+  const [showStartModal, setShowStartModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setShowStartModal(true);
+  };
+
+  const handleConfirmStart = () => {
+    setShowStartModal(false);
+    onStart();
+  };
+
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 py-6 sm:px-6 sm:py-10">
       <header className="mb-6 text-center sm:mb-10">
@@ -32,7 +46,8 @@ export default function HomeScreen({ onStart, loading, error }: HomeScreenProps)
             <BookOpen className="h-5 w-5 shrink-0 text-catalan-red" />
             Normes de l&apos;examen
           </h2>
-          <ul className="space-y-3 text-sm leading-relaxed text-exam-slate sm:text-base">
+          <ScoringLegend variant="full" />
+          <ul className="mt-4 space-y-3 text-sm leading-relaxed text-exam-slate sm:text-base">
             <li className="flex gap-2">
               <span className="mt-0.5 shrink-0 font-bold text-catalan-red">•</span>
               <span>
@@ -48,33 +63,17 @@ export default function HomeScreen({ onStart, loading, error }: HomeScreenProps)
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="mt-0.5 shrink-0 font-bold text-green-600">+</span>
+              <span className="mt-0.5 shrink-0 font-bold text-catalan-red">•</span>
               <span>
-                Resposta correcta: <strong>+1 punt</strong>
-              </span>
-            </li>
-            <li className="flex gap-2">
-              <span className="mt-0.5 shrink-0 font-bold text-red-600">
-                <Minus className="inline h-4 w-4" />
-              </span>
-              <span>
-                Resposta incorrecta: <strong>−0,33 punts</strong> de penalització
+                Toca una resposta per seleccionar-la. Torna a tocar per
+                desmarcar-la i deixar-la <strong>en blanc</strong>.
               </span>
             </li>
             <li className="flex gap-2">
               <span className="mt-0.5 shrink-0 font-bold text-catalan-red">•</span>
               <span>
-                Toca una resposta per seleccionar-la. Utilitza{" "}
-                <strong>Anterior</strong> / <strong>Següent</strong> per
-                navegar i revisar les preguntes.
-              </span>
-            </li>
-            <li className="flex gap-2">
-              <span className="mt-0.5 shrink-0 font-bold text-slate-400">
-                <ChevronRight className="inline h-4 w-4" />
-              </span>
-              <span>
-                Pregunta en blanc (sense resposta): <strong>0 punts</strong>
+                Utilitza <strong>Anterior</strong> / <strong>Següent</strong>{" "}
+                per navegar i revisar les preguntes abans de lliurar.
               </span>
             </li>
             <li className="flex gap-2">
@@ -87,8 +86,9 @@ export default function HomeScreen({ onStart, loading, error }: HomeScreenProps)
         </section>
 
         <section className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 sm:text-base">
-          <strong>Atenció:</strong> Les respostes errònies penalitzen la
-          puntuació. En cas de dubte, valora deixar la pregunta en blanc.
+          <strong>Atenció:</strong> les respostes incorrectes{" "}
+          <strong>resten 0,33 punts</strong>. En cas de dubte, deixa la pregunta
+          en blanc — no penalitza.
         </section>
 
         {error && (
@@ -101,14 +101,20 @@ export default function HomeScreen({ onStart, loading, error }: HomeScreenProps)
       <footer className="mt-6 pb-4 sm:mt-8">
         <button
           type="button"
-          onClick={onStart}
-          disabled={loading}
-          className="flex w-full min-h-[52px] items-center justify-center gap-2 rounded-xl bg-catalan-red px-6 py-3.5 text-base font-semibold text-white shadow-md transition active:scale-[0.98] hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60 sm:min-h-[56px] sm:text-lg"
+          onClick={handleOpenModal}
+          className="flex w-full min-h-[52px] items-center justify-center gap-2 rounded-xl bg-catalan-red px-6 py-3.5 text-base font-semibold text-white shadow-md transition active:scale-[0.98] hover:bg-red-700 sm:min-h-[56px] sm:text-lg"
         >
           <Play className="h-5 w-5" />
-          {loading ? "Carregant preguntes…" : "Començar l'examen"}
+          Començar l&apos;examen
         </button>
       </footer>
+
+      <StartExamModal
+        open={showStartModal}
+        loading={loading}
+        onClose={() => setShowStartModal(false)}
+        onConfirm={handleConfirmStart}
+      />
     </div>
   );
 }

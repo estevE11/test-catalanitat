@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import ScoringLegend from "@/components/ScoringLegend";
 import SectionProgressBars from "@/components/SectionProgressBars";
 import type { SectionProgress } from "@/lib/sections";
 import type { Question } from "@/lib/types";
@@ -56,6 +57,12 @@ export default function QuizScreen({
           </span>
         </div>
         <SectionProgressBars sections={sectionProgress} />
+        <div className="mt-3">
+          <ScoringLegend />
+        </div>
+        <p className="mt-2 text-xs text-slate-500 sm:text-sm">
+          Torna a tocar una resposta seleccionada per deixar la pregunta en blanc.
+        </p>
         <p className="mt-3 text-xs font-medium uppercase tracking-wide text-catalan-red sm:text-sm">
           Secció: {sectionName}
         </p>

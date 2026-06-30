@@ -26,3 +26,18 @@ body {
     padding-top: env(safe-area-inset-top);
   }
 }
+
+@keyframes modal-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-enter {
+  animation: modal-up 0.2s ease-out;
+}

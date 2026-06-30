@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import FinishReviewScreen from "@/components/FinishReviewScreen";
 import HomeScreen from "@/components/HomeScreen";
 import QuizScreen from "@/components/QuizScreen";
 import ResultsScreen from "@/components/ResultsScreen";
@@ -19,6 +20,8 @@ import { getSectionProgress } from "@/lib/sections";
 import {
   calculateSectionScores,
   calculateTotalScore,
+  getAnswerStats,
+  getFirstBlankIndex,
 } from "@/lib/scoring";
 import type { AppScreen, Question } from "@/lib/types";
 
@@ -71,6 +74,19 @@ export default function Home() {
     [questions, answersMap]
   );
 
+  const answerStats = useMemo(
+    () => getAnswerStats(userAnswers),
+    [userAnswers]
+  );
+
+  const blankQuestionNumbers = useMemo(
+    () =>
+      userAnswers
+        .filter((a) => a.choice === "skipped")
+        .map((a) => a.questionIndex + 1),
+    [userAnswers]
+  );
+
   const handleStart = () => {
     if (questions.length === 0) {
       preloadQuestions();
@@ -101,6 +117,16 @@ export default function Home() {
   };
 
   const handleFinish = () => {
+    setScreen("review");
+  };
+
+  const handleReviewBlanks = () => {
+    const firstBlank = getFirstBlankIndex(userAnswers);
+    setCurrentIndex(firstBlank ?? 0);
+    setScreen("quiz");
+  };
+
+  const handleConfirmResults = () => {
     setScreen("results");
   };
 
@@ -110,6 +136,17 @@ export default function Home() {
     setShuffledOptionsMap({});
     setScreen("home");
   };
+
+  if (screen === "review") {
+    return (
+      <FinishReviewScreen
+        stats={answerStats}
+        blankQuestionNumbers={blankQuestionNumbers}
+        onReview={handleReviewBlanks}
+        onConfirm={handleConfirmResults}
+      />
+    );
+  }
 
   if (screen === "quiz" && questions[currentIndex]) {
     const selectedAnswer = answersMap[currentIndex];
@@ -139,6 +176,7 @@ export default function Home() {
     return (
       <ResultsScreen
         totalScore={calculateTotalScore(userAnswers)}
+        stats={answerStats}
         sectionScores={calculateSectionScores(userAnswers)}
         onRetry={handleRetry}
       />

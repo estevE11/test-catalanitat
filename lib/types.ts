@@ -14,7 +14,14 @@ export interface UserAnswer {
   choice: AnswerChoice;
 }
 
-export type AppScreen = "home" | "quiz" | "results";
+export type AppScreen = "home" | "quiz" | "review" | "results";
+
+export interface AnswerStats {
+  correct: number;
+  incorrect: number;
+  blank: number;
+  total: number;
+}
 
 export interface SectionGroup {
   name: string;
