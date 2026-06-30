@@ -140,7 +140,6 @@ export default function Home() {
   if (screen === "review") {
     return (
       <FinishReviewScreen
-        stats={answerStats}
         blankQuestionNumbers={blankQuestionNumbers}
         onReview={handleReviewBlanks}
         onConfirm={handleConfirmResults}
@@ -176,7 +175,6 @@ export default function Home() {
     return (
       <ResultsScreen
         totalScore={calculateTotalScore(userAnswers)}
-        stats={answerStats}
         sectionScores={calculateSectionScores(userAnswers)}
         onRetry={handleRetry}
       />

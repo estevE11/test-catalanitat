@@ -10,28 +10,24 @@ import { useCallback, useState } from "react";
 import {
   buildShareMessage,
   formatScore,
-  getAnswerStats,
   getGlobalResult,
 } from "@/lib/scoring";
-import type { AnswerStats, SectionScore } from "@/lib/types";
+import type { SectionScore } from "@/lib/types";
 import Toast from "./Toast";
 
 interface ResultsScreenProps {
   totalScore: number;
-  stats: AnswerStats;
   sectionScores: SectionScore[];
   onRetry: () => void;
 }
 
 export default function ResultsScreen({
   totalScore,
-  stats,
   sectionScores,
   onRetry,
 }: ResultsScreenProps) {
   const [toastVisible, setToastVisible] = useState(false);
   const result = getGlobalResult(totalScore);
-  const penaltyPoints = Math.round(stats.incorrect * 0.33 * 100) / 100;
 
   const handleShare = useCallback(async () => {
     const message = buildShareMessage(totalScore, result.title);
@@ -69,34 +65,6 @@ export default function ResultsScreen({
           {result.description}
         </p>
       </header>
-
-      <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:mb-8 sm:p-5">
-        <h2 className="mb-3 text-sm font-semibold text-exam-navy sm:text-base">
-          Com s&apos;ha calculat la puntuació
-        </h2>
-        <div className="space-y-2 text-sm text-exam-slate sm:text-base">
-          <div className="flex justify-between">
-            <span>{stats.correct} respostes correctes</span>
-            <span className="font-medium text-green-700">+{stats.correct}</span>
-          </div>
-          {stats.incorrect > 0 && (
-            <div className="flex justify-between">
-              <span>{stats.incorrect} respostes incorrectes</span>
-              <span className="font-medium text-red-700">−{penaltyPoints}</span>
-            </div>
-          )}
-          {stats.blank > 0 && (
-            <div className="flex justify-between">
-              <span>{stats.blank} preguntes en blanc</span>
-              <span className="font-medium text-slate-500">0</span>
-            </div>
-          )}
-          <div className="flex justify-between border-t border-slate-200 pt-2 font-semibold text-exam-navy">
-            <span>Total</span>
-            <span>{formatScore(totalScore)}/25</span>
-          </div>
-        </div>
-      </section>
 
       <section className="mb-6 sm:mb-8">
         <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-exam-navy sm:text-lg">
