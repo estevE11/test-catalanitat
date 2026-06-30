@@ -30,7 +30,7 @@ export default function HomeScreen({ onStart, loading, error }: HomeScreenProps)
           <ShieldCheck className="h-8 w-8 text-white sm:h-9 sm:w-9" />
         </div>
         <p className="text-xs font-semibold uppercase tracking-widest text-catalan-red sm:text-sm">
-          Generalitat de Catalunya
+          Examen no oficial
         </p>
         <h1 className="mt-2 font-serif text-2xl font-bold leading-tight text-exam-navy sm:text-4xl">
           Test de Catalanitat
